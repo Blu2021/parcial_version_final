@@ -1,0 +1,242 @@
+//DAUD MANZO JUAN PABLO
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include "blu2021.h"
+#include "contribuyentes.h"
+
+#define CONTRIBUYENTE 3
+#define RECAUDACION 3
+int muestraRecaudacionesSaldadasMasMil(eRecaudacion arrayRecibido[],int tamanioArrayRecibido,eTipoRecaudacion arrayRecibidoDos[],int tamanioArrayRecibidoDos,eEstadoRecaudacion arrayRecibidoTres[],int tamanioArrayRecibidoTres,eContribuyente arrayRecibidoCuatro[],int tamanioArrayRecibidoCuatro);
+int muestraContribuyentesCargadosSegunTipo(eContribuyente arrayRecibido[],int tamanioArrayRecibido,eRecaudacion arrayRecibidoDos[],int tamanioArrayRecibidoDos,eTipoRecaudacion arrayRecibidoTres[],int tamanioArrayRecibidoTres,eEstadoRecaudacion arrayRecibidoCuatro[],int tamanioArrayRecibidoCuatro);
+
+int main(void)
+{
+	setbuf(stdout,NULL);
+
+	eContribuyente contribuyente[CONTRIBUYENTE];
+	eRecaudacion recaudacion[RECAUDACION];
+	eTipoRecaudacion tipoRecaudacion[3]={{1,"ARBA",0},{2,"IIBB",0},{3,"GANANCIAS",0}};
+	eEstadoRecaudacion estadoRecaudacion[3]={{1,"ADEUDADA",0},{2,"REFINANCIADA",0},{3,"SALDADA",0}};
+	int resultadoOpcionMenu;
+	int idContribuyente=1000;
+	int idRecaudacion=100;
+	int posLibre;
+
+	inicializarArrayContribuyente(contribuyente,CONTRIBUYENTE);
+	inicializarArrayRecaudacion(recaudacion,RECAUDACION);
+	do
+	{
+		printf("Bienvenido al Menu Contribuyentes\n"
+					"1: ALTA CONTRIBUYENTE\n"
+					"2: MODIFICAR CONTRIBUYENTE\n"
+					"3: BAJA DE CONTRIBUYENTE\n"
+					"4: CARGAR RECAUDACION\n"
+					"5: REFINANCIAR/SALDAR RECAUDACION\n"
+					"6: IMPRIMIR CONTRIBUYENTES\n"
+					"7: IMPRIMIR RECAUDACIONES SALDADAS\n"
+				    "8: IMPRIMIR RECAUDACIONES SALDADAS +1000\n"
+					"9: IMPRIMIR CONTRIBUYENTES SEGUN TIPO R\n"
+				    "10:        \n"
+				    "11:        \n"
+				    "12:SALIR\n");
+		if(utn_levantaEnteros(&resultadoOpcionMenu,"Ingrese opcion Menu","ERROR,opcion invalida",1,12))
+		{
+			switch(resultadoOpcionMenu)
+			{
+				case 1:
+					posLibre=buscarLibreContribuyente(contribuyente,CONTRIBUYENTE);
+					if(posLibre!=-1)
+					{
+						if(cargaDatosContribuyente(contribuyente,posLibre))
+						{
+							contribuyente[posLibre].idContribuyente=idContribuyente;
+							printf("Contribuyente dado de alta con exito bajo id %d\n",idContribuyente);
+							idContribuyente++;
+							vueltaAtras();
+						}
+						else
+						{
+							printf("Algo fallo en la carga de datos\n");
+							vueltaAtras();
+						}
+					}
+					else
+					{
+						printf("No hay lugar disponible, elimine al menos uno\n");
+						vueltaAtras();
+					}
+				break;
+				case 2:
+					menuModificar(contribuyente,CONTRIBUYENTE);
+				break;
+				case 3:
+					bajaDatosContribuyente(contribuyente,CONTRIBUYENTE,recaudacion,RECAUDACION,tipoRecaudacion,3,estadoRecaudacion,3);
+				break;
+				case 4:
+					posLibre=buscarLibreRecaudacion(recaudacion,RECAUDACION);
+					if(posLibre!=-1)
+					{
+						if(cargaDatosRecaudacion(recaudacion,posLibre,contribuyente,CONTRIBUYENTE))
+						{
+							recaudacion[posLibre].idRecaudacion=idRecaudacion;
+							printf("Recaudacion dada de alta con exito bajo id %d\n",idRecaudacion);
+							idRecaudacion++;
+							vueltaAtras();
+						}
+						else
+						{
+							printf("Algo fallo en la carga de datos ó no existe el id contribuyente\n");
+							vueltaAtras();
+						}
+					}
+					else
+					{
+						printf("No hay lugar disponible, elimine al menos uno\n");
+						vueltaAtras();
+					}
+				break;
+				case 5:
+					muestraRecaudacionesPorId(recaudacion,RECAUDACION,contribuyente,CONTRIBUYENTE);
+					vueltaAtras();
+				break;
+				case 6:
+					muestraContribuyentesCargados(contribuyente,CONTRIBUYENTE,recaudacion,RECAUDACION,tipoRecaudacion,3,estadoRecaudacion,3);
+				break;
+				case 7:
+					muestraRecaudacionesSaldadas(recaudacion,RECAUDACION,tipoRecaudacion,3,estadoRecaudacion,3,contribuyente,CONTRIBUYENTE);
+					vueltaAtras();
+				break;
+				case 8:
+					muestraRecaudacionesSaldadasMasMil(recaudacion,RECAUDACION,tipoRecaudacion,3,estadoRecaudacion,3,contribuyente,CONTRIBUYENTE);
+					vueltaAtras();
+				break;
+				case 9:
+					muestraContribuyentesCargadosSegunTipo(contribuyente,CONTRIBUYENTE,recaudacion,RECAUDACION,tipoRecaudacion,3,estadoRecaudacion,3);
+					vueltaAtras();
+				break;
+				case 10:
+
+				break;
+				case 11:
+				break;
+				case 12:
+					printf("Menu esta finalizando...");
+				break;
+			}
+		}
+		else
+		{
+			printf("Usted debe ingresar opcion del 1 al 9 , intente de nuevo\n");
+		}
+	}while(resultadoOpcionMenu!=12);
+
+	return EXIT_SUCCESS;
+}
+
+int muestraRecaudacionesSaldadasMasMil(eRecaudacion arrayRecibido[],int tamanioArrayRecibido,eTipoRecaudacion arrayRecibidoDos[],int tamanioArrayRecibidoDos,eEstadoRecaudacion arrayRecibidoTres[],int tamanioArrayRecibidoTres,eContribuyente arrayRecibidoCuatro[],int tamanioArrayRecibidoCuatro)
+{
+	int exito=0;
+	int sePuedeMostrar=0;
+	int i;
+	int j;
+	char descripcionTipo[15];
+	char descripcionEstado[15];
+
+	if(arrayRecibido!=NULL&&arrayRecibidoDos!=NULL&&arrayRecibidoTres!=NULL)
+	{
+		for(i=0;i<tamanioArrayRecibido;i++)
+		{
+				if(arrayRecibido[i].estaVacio==0&&arrayRecibido[i].idEstadoRecaudacion==3&&arrayRecibido[i].importe>999)
+				{
+						printf("-------------------------RECAUDACIONES SALDADAS +1000-------------------------\n");
+						printf("MES    TipoRecaudacion    EstadoRecaudacion   IMPORTE     ID RECAUDACION\n");
+						sePuedeMostrar++;
+						consigueTipoRecaudacion(arrayRecibidoDos,tamanioArrayRecibidoDos,arrayRecibido[i].tipoRecaudacion,descripcionTipo);
+						consigueEstadoRecaudacion(arrayRecibidoTres,tamanioArrayRecibidoTres,arrayRecibido[i].idEstadoRecaudacion,descripcionEstado);
+						printf("%-7d%-19s%-20s%-12.2f%d\n",arrayRecibido[i].mes,descripcionTipo,descripcionEstado,arrayRecibido[i].importe,arrayRecibido[i].idRecaudacion);
+						for(j=0;j<tamanioArrayRecibidoCuatro;j++)
+						{
+								if(arrayRecibido[i].idContribuyente==arrayRecibidoCuatro[j].idContribuyente)
+								{
+										printf("Pertenecientes al contribuyente       NOMBRE         CUIL\n");
+										printf("                                      %-15s%s\n",arrayRecibidoCuatro[j].nombre,arrayRecibidoCuatro[j].cuil);
+										break;
+								}
+						}
+				}
+	  }
+
+		if(sePuedeMostrar==0)
+		{
+			 printf("No existen recaudaciones saldadas que mostrar\n");
+		}
+		exito=1;
+	}
+
+	return exito;
+}
+
+int muestraContribuyentesCargadosSegunTipo(eContribuyente arrayRecibido[],int tamanioArrayRecibido,eRecaudacion arrayRecibidoDos[],int tamanioArrayRecibidoDos,eTipoRecaudacion arrayRecibidoTres[],int tamanioArrayRecibidoTres,eEstadoRecaudacion arrayRecibidoCuatro[],int tamanioArrayRecibidoCuatro)
+{
+	int i;
+	int exito=0;
+	int sePuedeMostrar=0;
+	int auxTipoRecaudacion;
+	int idContribuyenteMostrar;
+	int j;
+
+	if(arrayRecibido!=NULL&&arrayRecibidoDos!=NULL&&arrayRecibidoTres!=NULL&&arrayRecibidoCuatro!=NULL)
+	{
+		exito=1;
+		printf("Ingrese tipo recaudacion 1-ARBA\n"
+			   " para contribuyenyes     2-IIBB\n"
+			   "     a mostrar           3-GANANCIAS\n");
+		fflush(stdin);
+		scanf("%d",&auxTipoRecaudacion);
+		while(auxTipoRecaudacion<1||auxTipoRecaudacion>3)
+		{
+			printf("ERROR,opcion inexistente\n");
+			printf("Ingrese tipo recaudacion 1-ARBA\n"
+				   " para contribuyenyes     2-IIBB\n"
+				   "     a mostrar           3-GANANCIAS\n");
+			fflush(stdin);
+			scanf("%d",&auxTipoRecaudacion);
+		}
+		for(i=0;i<tamanioArrayRecibidoDos;i++)
+		{
+			if(arrayRecibidoDos[i].estaVacio==0&&auxTipoRecaudacion==arrayRecibidoDos[i].tipoRecaudacion)
+			{
+				printf("--------------DATOS CONTRIBUYENTE----------------\n");
+				printf("ID         NOMBRE       APELLIDO        CUIL\n");
+				sePuedeMostrar++;
+				idContribuyenteMostrar=arrayRecibidoDos[i].idContribuyente;
+				for(j=0;j<tamanioArrayRecibido;j++)
+				{
+					if(arrayRecibido[j].idContribuyente==idContribuyenteMostrar)
+					{
+						break;
+					}
+				}
+				muestraContribuyenteCargado(arrayRecibido[j]);
+				muestraRecaudacionesContribuyente(arrayRecibidoDos,tamanioArrayRecibidoDos,arrayRecibidoTres,tamanioArrayRecibidoTres,arrayRecibidoCuatro,tamanioArrayRecibidoCuatro,idContribuyenteMostrar);
+			}
+		}
+
+		if(sePuedeMostrar==0)
+		{
+			printf("No hay datos cargados que mostrar\n\n");
+			printf("Pulse cualquiera tecla para volver\n");
+			fflush(stdin);
+			getchar();
+		}
+		else
+		{
+			printf("Pulse cualquiera tecla para volver\n");
+			fflush(stdin);
+			getchar();
+		}
+	}
+	return exito;
+}
