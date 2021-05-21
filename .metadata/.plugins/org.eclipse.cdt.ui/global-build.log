@@ -1,6 +1,5 @@
-19:47:47 **** Incremental Build of configuration Debug for project parcial_final ****
+23:01:09 **** Incremental Build of configuration Debug for project parcial_final ****
 Info: Internal Builder is used for build
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\parcial_final.o" "..\\src\\parcial_final.c" 
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\contribuyentes.o" "..\\src\\contribuyentes.c" 
 gcc -O0 -g3 -Wall -c -fmessage-length=0 -o "src\\recaudaciones.o" "..\\src\\recaudaciones.c" 
 gcc -o parcial_final.exe "src\\blu2021.o" "src\\contribuyentes.o" "src\\parcial_final.o" "src\\recaudaciones.o" 
+Info: Nothing to build for parcial_final

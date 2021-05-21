@@ -65,4 +65,7 @@ int muestraContribuyentesCargados(eContribuyente arrayRecibido[],int tamanioArra
 int bajaDatosContribuyente(eContribuyente arrayRecibido[],int tamanioArrayRecibido,eRecaudacion arrayRecibidoDos[],int tamanioArrayRecibidoDos,eTipoRecaudacion arrayRecibidoTres[],int tamanioArrayRecibidoTres,eEstadoRecaudacion arrayRecibidoCuatro[],int tamanioArrayRecibidoCuatro);
 int muestraContribuyentesCargadosSegunTipo(eContribuyente arrayRecibido[],int tamanioArrayRecibido,eRecaudacion arrayRecibidoDos[],int tamanioArrayRecibidoDos,eTipoRecaudacion arrayRecibidoTres[],int tamanioArrayRecibidoTres,eEstadoRecaudacion arrayRecibidoCuatro[],int tamanioArrayRecibidoCuatro);
 int muestraContribuyentesCargadosSegunEstadoRefinanciar(eContribuyente arrayRecibido[],int tamanioArrayRecibido,eRecaudacion arrayRecibidoDos[],int tamanioArrayRecibidoDos,eTipoRecaudacion arrayRecibidoTres[],int tamanioArrayRecibidoTres,eEstadoRecaudacion arrayRecibidoCuatro[],int tamanioArrayRecibidoCuatro);
+void muestraContribuyenteCargadoPorId(eContribuyente arrayRecibido[],int tamUno,int idMostrar);
+int muestraContribuyenteMasRecaudaciones(eContribuyente arrayRecibido[],int tamUno,eRecaudacion arrayDos[],int tamDos);
+
 #endif /* CONTRIBUYENTES_H_ */

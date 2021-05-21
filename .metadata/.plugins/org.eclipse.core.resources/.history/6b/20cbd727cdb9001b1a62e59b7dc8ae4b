@@ -224,3 +224,155 @@ int bajaDatosContribuyente(eContribuyente arrayRecibido[],int tamanioArrayRecibi
 	}
 	return exito;
 }
+
+
+int muestraContribuyentesCargadosSegunTipo(eContribuyente arrayRecibido[],int tamanioArrayRecibido,eRecaudacion arrayRecibidoDos[],int tamanioArrayRecibidoDos,eTipoRecaudacion arrayRecibidoTres[],int tamanioArrayRecibidoTres,eEstadoRecaudacion arrayRecibidoCuatro[],int tamanioArrayRecibidoCuatro)
+{
+	int i;
+	int exito=0;
+	int sePuedeMostrar=0;
+	int auxTipoRecaudacion;
+	int idContribuyenteMostrar;
+	int j;
+
+	if(arrayRecibido!=NULL&&arrayRecibidoDos!=NULL&&arrayRecibidoTres!=NULL&&arrayRecibidoCuatro!=NULL)
+	{
+		exito=1;
+		printf("Ingrese tipo recaudacion 1-ARBA\n"
+			   " para contribuyenyes     2-IIBB\n"
+			   "     a mostrar           3-GANANCIAS\n");
+		fflush(stdin);
+		scanf("%d",&auxTipoRecaudacion);
+		while(auxTipoRecaudacion<1||auxTipoRecaudacion>3)
+		{
+			printf("ERROR,opcion inexistente\n");
+			printf("Ingrese tipo recaudacion 1-ARBA\n"
+				   " para contribuyentes     2-IIBB\n"
+				   "     a mostrar           3-GANANCIAS\n");
+			fflush(stdin);
+			scanf("%d",&auxTipoRecaudacion);
+		}
+		for(i=0;i<tamanioArrayRecibidoDos;i++)
+		{
+			if(arrayRecibidoDos[i].estaVacio==0&&auxTipoRecaudacion==arrayRecibidoDos[i].tipoRecaudacion)
+			{
+				printf("--------------DATOS CONTRIBUYENTE----------------\n");
+				printf("ID         NOMBRE       APELLIDO        CUIL\n");
+				sePuedeMostrar++;
+				idContribuyenteMostrar=arrayRecibidoDos[i].idContribuyente;
+				for(j=0;j<tamanioArrayRecibido;j++)
+				{
+					if(arrayRecibido[j].idContribuyente==idContribuyenteMostrar)
+					{
+						break;
+					}
+				}
+				muestraContribuyenteCargado(arrayRecibido[j]);
+			}
+		}
+
+		if(sePuedeMostrar==0)
+		{
+			printf("No hay datos cargados que mostrar\n\n");
+		}
+	}
+	return exito;
+}
+
+int muestraContribuyentesCargadosSegunEstadoRefinanciar(eContribuyente arrayRecibido[],int tamanioArrayRecibido,eRecaudacion arrayRecibidoDos[],int tamanioArrayRecibidoDos,eTipoRecaudacion arrayRecibidoTres[],int tamanioArrayRecibidoTres,eEstadoRecaudacion arrayRecibidoCuatro[],int tamanioArrayRecibidoCuatro)
+{
+	int i;
+	int exito=0;
+	int sePuedeMostrar=0;
+	int idContribuyenteMostrar;
+	int j;
+
+	if(arrayRecibido!=NULL&&arrayRecibidoDos!=NULL&&arrayRecibidoTres!=NULL&&arrayRecibidoCuatro!=NULL)
+	{
+		for(i=0;i<tamanioArrayRecibidoDos;i++)
+		{
+			if(arrayRecibidoDos[i].estaVacio==0&&arrayRecibidoDos[i].idEstadoRecaudacion==2)
+			{
+				printf("--------------DATOS CONTRIBUYENTE----------------\n");
+				printf("ID         NOMBRE       APELLIDO        CUIL\n");
+				sePuedeMostrar++;
+				idContribuyenteMostrar=arrayRecibidoDos[i].idContribuyente;
+				for(j=0;j<tamanioArrayRecibido;j++)
+				{
+					if(arrayRecibido[j].idContribuyente==idContribuyenteMostrar)
+					{
+						break;
+					}
+				}
+				muestraContribuyenteCargado(arrayRecibido[j]);
+				muestraRecaudacionesContribuyente(arrayRecibidoDos,tamanioArrayRecibidoDos,arrayRecibidoTres,tamanioArrayRecibidoTres,arrayRecibidoCuatro,tamanioArrayRecibidoCuatro,idContribuyenteMostrar);
+			}
+		}
+
+		if(sePuedeMostrar==0)
+		{
+			printf("No hay datos cargados que mostrar\n\n");
+		}
+	}
+	return exito;
+}
+
+int muestraContribuyenteMasRecaudaciones(eContribuyente arrayRecibido[],int tamUno,eRecaudacion arrayDos[],int tamDos)
+{
+	int exito=0;
+	int i;
+	int j;
+	int contadorRecaudaciones;
+	int banderaRecaudacion;
+	int banderaMayor=1;
+	int contadorMasRecaudaciones=0;
+	int idContribuyenteMasRecaudaciones;
+
+	for(i=0;i<tamUno;i++)
+	{
+		if(arrayRecibido[i].estaVacio==0)
+		{
+			contadorRecaudaciones=0;
+			for(j=0;j<tamDos;j++)
+			{
+				if(arrayRecibido[i].idContribuyente==arrayDos[j].idContribuyente&&arrayDos[j].idEstadoRecaudacion==2)
+				{
+					contadorRecaudaciones++;
+					banderaRecaudacion=1;
+				}
+			}
+			if(banderaRecaudacion)
+			{
+				banderaRecaudacion=0;
+				if(banderaMayor||contadorRecaudaciones>contadorMasRecaudaciones)
+				{
+					idContribuyenteMasRecaudaciones=arrayRecibido[i].idContribuyente;
+					contadorMasRecaudaciones=contadorRecaudaciones;
+					banderaMayor=0;
+				}
+		    }
+	   }
+	}
+	if(contadorMasRecaudaciones)
+	{
+		printf("CONTRIBUYENTE CON MAS RECAUDACIONES\n");
+		muestraContribuyenteCargadoPorId(arrayRecibido,tamUno,idContribuyenteMasRecaudaciones);
+	}
+	else
+	{
+		printf("No hay contribuyente con recaudaciones a refinanciar cargado\n");
+	}
+	return exito;
+}
+void muestraContribuyenteCargadoPorId(eContribuyente arrayRecibido[],int tamUno,int idMostrar)
+{
+	int i;
+	for(i=0;i<tamUno;i++)
+	{
+		if(arrayRecibido[i].idContribuyente==idMostrar)
+		{
+			printf("%-11d%-13s%-16s%s\n",arrayRecibido[i].idContribuyente,arrayRecibido[i].nombre,arrayRecibido[i].apellido,arrayRecibido[i].cuil);
+		}
+	}
+
+}

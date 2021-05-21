@@ -135,15 +135,15 @@ int muestraRecaudacionesPorId(eRecaudacion arrayRecibido[],int tamUno,eContribuy
 				}
 			}
 			printf("Ingrese 1:Cambiar estado a refinanciar\n"
-							"        2:Cambiar estado a saldado\n"
-							"        3:CANCELAR\n");
+						"   2:Cambiar estado a saldado\n"
+				        "   3:CANCELAR\n");
 			fflush(stdin);
 			scanf("%d",&opcionCambiaEstado);
 			while(opcionCambiaEstado<1||opcionCambiaEstado>3)
 			{
 					printf("Ingrese 1:Cambiar estado a refinanciar\n"
-									"        2:Cambiar estado a saldado"
-									"        3:CANCELAR");
+								"   2:Cambiar estado a saldado\n"
+								"   3:CANCELAR\n");
 					fflush(stdin);
 					scanf("%d",&opcionCambiaEstado);
 			}
